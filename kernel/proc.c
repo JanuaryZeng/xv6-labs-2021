@@ -288,7 +288,8 @@ fork(void)
     return -1;
   }
   np->sz = p->sz;
-
+  //复制trace的值
+  np->trace_num = p->trace_num;
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 

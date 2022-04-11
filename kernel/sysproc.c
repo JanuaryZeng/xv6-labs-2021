@@ -20,7 +20,7 @@ sys_exit(void)
 uint64
 sys_getpid(void)
 {
-  return myproc()->pid;
+    return myproc()->pid;
 }
 
 uint64

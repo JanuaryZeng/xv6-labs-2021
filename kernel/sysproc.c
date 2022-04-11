@@ -80,8 +80,34 @@ sys_sleep(void)
 int
 sys_pgaccess(void)
 {
-  // lab pgtbl: your code here.
-  return 0;
+    uint64 buf, ans = 0;
+    int n, rtn;
+    if(argaddr(0,&buf)<0)
+        return -1;
+    if(argint(1, &n) < 0)
+        return -1;
+    if(argint(2, &rtn) < 0)
+        return -1;
+    if(buf < 0 || buf > MAXVA)
+        return -1;
+    if(n < 0 || n >= 512)
+        return -1;
+
+    struct proc *p = myproc();
+    if(p == 0)
+        return 1;
+
+    pagetable_t pagetable = p->pagetable;
+//    vmprint(pagetable);
+    for(int i = 0; i < n; ++i){
+        pte_t* pte = walk(pagetable, buf + (uint64)PGSIZE*i, 0);
+        if(pte != 0 && ((*pte) & PTE_A)){
+            ans |= (1 << i);
+            *pte ^= PTE_A;
+        }
+    }
+
+    return copyout(myproc()->pagetable, rtn, (char *)&ans, sizeof(ans));
 }
 #endif
 

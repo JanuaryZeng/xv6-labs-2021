@@ -23,6 +23,11 @@ struct {
   struct run *freelist;
 } kmem;
 
+struct {
+    struct spinlock lock;
+    uint counter[(PHYSTOP-KERNBASE) / PGSIZE];
+} refcnt;
+
 void
 kinit()
 {
@@ -46,10 +51,19 @@ freerange(void *pa_start, void *pa_end)
 void
 kfree(void *pa)
 {
-  struct run *r;
+    if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
+        panic("kfree");
 
-  if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
-    panic("kfree");
+    uint idx = ((uint64)pa-KERNBASE)/PGSIZE;
+    acquire(&refcnt.lock);
+    if(refcnt.counter[idx] > 1){
+        refcnt.counter[idx]--;
+        release(&refcnt.lock);
+        return;
+    }
+    refcnt.counter[idx] = 0;
+    release(&refcnt.lock);
+  struct run *r;
 
   // Fill with junk to catch dangling refs.
   memset(pa, 1, PGSIZE);
@@ -75,8 +89,73 @@ kalloc(void)
   if(r)
     kmem.freelist = r->next;
   release(&kmem.lock);
+  if(r) {
+      memset((char *) r, 5, PGSIZE); // fill with junk
+  }
+    if(r) {
+        addref((uint64)r);
+    }
+    return (void*)r;
+}
 
-  if(r)
-    memset((char*)r, 5, PGSIZE); // fill with junk
-  return (void*)r;
+void *
+kalloc_nolock(void)
+{
+    struct run *r;
+
+    acquire(&kmem.lock);
+    r = kmem.freelist;
+    if(r)
+        kmem.freelist = r->next;
+    release(&kmem.lock);
+    if(r) {
+        memset((char *) r, 5, PGSIZE); // fill with junk
+    }
+    if(r) {
+        refcnt.counter[((uint64)r - KERNBASE)/PGSIZE]++;
+    }
+    return (void*)r;
+}
+
+int
+cowcopy(uint64 va, pagetable_t page)
+{
+    va = PGROUNDDOWN(va);
+    pte_t *pte = walk(page, va, 0);
+    uint64 pa = PTE2PA(*pte);
+    uint flags = PTE_FLAGS(*pte);
+
+    if(!(flags & PTE_COW)){
+        printf("not cow\n");
+        return -1;
+    }
+
+    uint idx = (pa - KERNBASE)/PGSIZE;
+    acquire(&refcnt.lock);
+    if(refcnt.counter[idx] > 1){
+        uint64 pa_new = (uint64)kalloc_nolock();
+        if(pa_new == 0) {
+            release(&refcnt.lock);
+            return -1;
+        }
+        refcnt.counter[idx]--;
+        memmove((char*)pa_new, (char*)pa, PGSIZE);
+        if(mappages(page, va, PGSIZE, pa_new, ((flags & (~PTE_COW)) | PTE_W)) != 0){
+            kfree((char*)pa_new);
+            release(&refcnt.lock);
+            return -1;
+        }
+    }else{
+        (*pte) = ((*pte) & (~PTE_COW)) | PTE_W;
+    }
+    release(&refcnt.lock);
+    return 0;
+}
+
+
+void addref(uint64 pa)
+{
+    acquire(&refcnt.lock);
+    refcnt.counter[(pa - KERNBASE)/PGSIZE]++;
+    release(&refcnt.lock);
 }

@@ -13,8 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df8f3edd-a447-40ea-80b1-d788333bb451" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/user/uthread.c" beforeDir="false" afterPath="$PROJECT_DIR$/user/uthread.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/uthread_switch.S" beforeDir="false" afterPath="$PROJECT_DIR$/user/uthread_switch.S" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notxv6/ph.c" beforeDir="false" afterPath="$PROJECT_DIR$/notxv6/ph.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,6 +78,11 @@
       <debugger kind="GDB">/usr/bin/gdb-multiarch</debugger>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="qemu-gdb" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="qemu-gdb" workingDirectory="" arguments="">
         <envs />
@@ -118,7 +123,7 @@
       <workItem from="1649402159760" duration="51000" />
       <workItem from="1649402224044" duration="42193000" />
       <workItem from="1649936504012" duration="38581000" />
-      <workItem from="1650177647889" duration="5024000" />
+      <workItem from="1650177647889" duration="6896000" />
     </task>
     <servers />
   </component>

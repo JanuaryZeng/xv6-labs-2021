@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="link_file" ENABLED="true" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="df8f3edd-a447-40ea-80b1-d788333bb451" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/user/uthread.c" beforeDir="false" afterPath="$PROJECT_DIR$/user/uthread.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/uthread_switch.S" beforeDir="false" afterPath="$PROJECT_DIR$/user/uthread_switch.S" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="clangTidyViaClangd" value="false" />
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Makefile" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/user/ls.c" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/user/sh.c" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/kernel/param.h" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectId" id="27SlhGRvtxYF7hEPeDnXo6VQjsU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/user" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Target.qemu">
+    <configuration name="qemu" type="CLion_Remote" version="1" remoteCommand="127.0.0.1:26000" symbolFile="$PROJECT_DIR$/kernel/kernel" sysroot="">
+      <debugger kind="GDB">/usr/bin/gdb-multiarch</debugger>
+      <method v="2" />
+    </configuration>
+    <configuration name="uthread" type="CLion_Remote" version="1" remoteCommand="127.0.0.1:26000" symbolFile="$PROJECT_DIR$/user/_uthread" sysroot="">
+      <debugger kind="GDB">/usr/bin/gdb-multiarch</debugger>
+      <method v="2" />
+    </configuration>
+    <configuration name="qemu-gdb" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="qemu-gdb" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="qemu" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="qemu" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="GDB Remote Debug.qemu" />
+      <item itemvalue="GDB Remote Debug.uthread" />
+      <item itemvalue="Makefile Target.qemu" />
+      <item itemvalue="Makefile Target.qemu-gdb" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.qemu" />
+        <item itemvalue="Makefile Target.qemu-gdb" />
+        <item itemvalue="Makefile Target.qemu-gdb" />
+        <item itemvalue="Makefile Target.qemu-gdb" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="df8f3edd-a447-40ea-80b1-d788333bb451" name="Default Changelist" comment="" />
+      <created>1649321485442</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649321485442</updated>
+      <workItem from="1649321486650" duration="10497000" />
+      <workItem from="1649402154596" duration="2000" />
+      <workItem from="1649402159760" duration="51000" />
+      <workItem from="1649402224044" duration="42193000" />
+      <workItem from="1649936504012" duration="38581000" />
+      <workItem from="1650177647889" duration="5024000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+</project>

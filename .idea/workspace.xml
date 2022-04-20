@@ -15,6 +15,7 @@
     <list default="true" id="df8f3edd-a447-40ea-80b1-d788333bb451" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/kernel/e1000.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/e1000.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packets.pcap" beforeDir="false" afterPath="$PROJECT_DIR$/packets.pcap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/nettests.c" beforeDir="false" afterPath="$PROJECT_DIR$/user/nettests.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +124,7 @@
       <workItem from="1649402159760" duration="51000" />
       <workItem from="1649402224044" duration="42193000" />
       <workItem from="1649936504012" duration="38581000" />
-      <workItem from="1650177647889" duration="21401000" />
+      <workItem from="1650177647889" duration="21710000" />
     </task>
     <servers />
   </component>

@@ -20,7 +20,7 @@ ping(uint16 sport, uint16 dport, int attempts)
 
   // you can send a UDP packet to any Internet address
   // by using a different dst.
-  
+
   if((fd = connect(dst, sport, dport)) < 0){
     fprintf(2, "ping: connect() failed\n");
     exit(1);
@@ -239,19 +239,19 @@ dns()
     fprintf(2, "ping: connect() failed\n");
     exit(1);
   }
-
   len = dns_req(obuf);
   
   if(write(fd, obuf, len) < 0){
     fprintf(2, "dns: send() failed\n");
     exit(1);
   }
-  int cc = read(fd, ibuf, sizeof(ibuf));
+
+    int cc = read(fd, ibuf, sizeof(ibuf));
   if(cc < 0){
     fprintf(2, "dns: recv() failed\n");
     exit(1);
   }
-  dns_rep(ibuf, cc);
+    dns_rep(ibuf, cc);
 
   close(fd);
 }  
@@ -263,16 +263,16 @@ main(int argc, char *argv[])
   uint16 dport = NET_TESTS_PORT;
 
   printf("nettests running on port %d\n", dport);
-  
+
   printf("testing ping: ");
   ping(2000, dport, 1);
   printf("OK\n");
-  
+
   printf("testing single-process pings: ");
   for (i = 0; i < 100; i++)
     ping(2000, dport, 1);
   printf("OK\n");
-  
+
   printf("testing multi-process pings: ");
   for (i = 0; i < 10; i++){
     int pid = fork();

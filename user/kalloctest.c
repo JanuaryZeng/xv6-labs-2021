@@ -119,3 +119,23 @@ void test2() {
 }
 
 
+/*
+kalloctest
+start test1
+test1 results:
+--- lock kmem/bcache stats
+lock: kmem: #test-and-set 23955 #acquire() 614626
+lock: bcache: #test-and-set 0 #acquire() 520
+--- top 5 contended locks:
+lock: proc: #test-and-set 8723233 #acquire() 3529482
+lock: virtio_disk: #test-and-set 44952 #acquire() 171
+lock: proc: #test-and-set 36835 #acquire() 3529105
+lock: kmem: #test-and-set 23955 #acquire() 614626
+lock: proc: #test-and-set 17759 #acquire() 3594355
+tot= 23955
+test1 FAIL
+start test2
+total free number of pages: 32499 (out of 32768)
+...
+test2 OK
+*/

@@ -24,7 +24,7 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 // there should be one superblock per disk device, but we run with
 // only one device
-struct superblock sb; 
+struct superblock sb;
 
 // Read the super block.
 static void
@@ -180,7 +180,7 @@ void
 iinit()
 {
   int i = 0;
-  
+
   initlock(&itable.lock, "itable");
   for(i = 0; i < NINODE; i++) {
     initsleeplock(&itable.inode[i].lock, "inode");
@@ -401,6 +401,28 @@ bmap(struct inode *ip, uint bn)
     return addr;
   }
 
+    bn -= NINDIRECT;
+  if(bn < N2NDIRECT){
+      uint father = bn / NINDIRECT;
+      uint child  = bn % NINDIRECT;
+      if((addr = ip->addrs[NDIRECT+1]) == 0)
+          ip->addrs[NDIRECT+1] = addr = balloc(ip->dev);
+      bp = bread(ip->dev, addr);
+      a = (uint*)bp->data;
+      if((addr = a[father]) == 0){
+          a[father] = addr = balloc(ip->dev);
+          log_write(bp);
+      }
+      brelse(bp);
+      bp = bread(ip->dev, addr);
+      a = (uint*)bp->data;
+      if((addr = a[child]) == 0){
+          a[child] = addr = balloc(ip->dev);
+          log_write(bp);
+      }
+      brelse(bp);
+      return addr;
+  }
   panic("bmap: out of range");
 }
 
@@ -410,8 +432,8 @@ void
 itrunc(struct inode *ip)
 {
   int i, j;
-  struct buf *bp;
-  uint *a;
+  struct buf *bp, *tmp;
+  uint *a, *b;
 
   for(i = 0; i < NDIRECT; i++){
     if(ip->addrs[i]){
@@ -431,6 +453,27 @@ itrunc(struct inode *ip)
     bfree(ip->dev, ip->addrs[NDIRECT]);
     ip->addrs[NDIRECT] = 0;
   }
+
+  if(ip->addrs[NDIRECT+1]){
+      bp = bread(ip->dev, ip->addrs[NDIRECT+1]);
+      a = (uint*)bp->data;
+      for(j = 0; j < NINDIRECT; j++){
+          if(a[j]){
+              tmp = bread(ip->dev, a[j]);
+              b = (uint*)tmp->data;
+              for(int k = 0; k < NINDIRECT; ++k){
+                  if(b[k])
+                      bfree(ip->dev, b[k]);
+              }
+              brelse(tmp);
+              bfree(ip->dev, a[j]);
+          }
+      }
+      brelse(bp);
+      bfree(ip->dev, ip->addrs[NDIRECT+1]);
+      ip->addrs[NDIRECT+1] = 0;
+  }
+
 
   ip->size = 0;
   iupdate(ip);
@@ -495,6 +538,7 @@ writei(struct inode *ip, int user_src, uint64 src, uint off, uint n)
     return -1;
 
   for(tot=0; tot<n; tot+=m, off+=m, src+=m){
+//      printf("off/BSIZE: %d\n", off/BSIZE);
     bp = bread(ip->dev, bmap(ip, off/BSIZE));
     m = min(n - tot, BSIZE - off%BSIZE);
     if(either_copyin(bp->data + (off % BSIZE), user_src, src, m) == -1) {

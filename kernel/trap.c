@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "fcntl.h"
 
 struct spinlock tickslock;
 uint ticks;
@@ -15,6 +16,8 @@ extern char trampoline[], uservec[], userret[];
 void kernelvec();
 
 extern int devintr();
+
+int mmap_handler(uint64 va, int cause);
 
 void
 trapinit(void)
@@ -67,7 +70,16 @@ usertrap(void)
     syscall();
   } else if((which_dev = devintr()) != 0){
     // ok
-  } else {
+  }else if(r_scause() == 13 || r_scause() == 15){
+#ifdef  LAB_MMAP
+        //读取产生页面故障的虚拟地址，并判断是否位于有效区间
+      uint64 fault_va = r_stval();
+      if(PGROUNDUP(p->trapframe->sp) - 1 < fault_va && fault_va < p->sz){
+            if(mmap_handler(fault_va, r_scause()) != 0) p->killed = 1;
+      }else
+          p->killed = 1;
+#endif
+  }else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
     p->killed = 1;
@@ -218,3 +230,63 @@ devintr()
   }
 }
 
+/**
+ * @brief mmap_handler 处理mmap惰性分配导致的页面错误
+ * @param va 页面故障虚拟地址
+ * @param cause 页面故障原因
+ * @return 0成功，-1失败
+ */
+struct file {
+    enum { FD_NONE, FD_PIPE, FD_INODE, FD_DEVICE } type;
+    int ref; // reference count
+    char readable;
+    char writable;
+    struct pipe *pipe; // FD_PIPE
+    struct inode *ip;  // FD_INODE and FD_DEVICE
+    uint off;          // FD_INODE
+    short major;       // FD_DEVICE
+};
+int mmap_handler(uint64 va, int cause){
+    int i;
+    struct proc *p = myproc();
+    //根据地址查找属于哪一个VMA
+    for(i = 0; i < NVMA; ++i){
+        if(p->vma[i].used && p->vma[i].addr <= va && va <= p->vma[i].addr + p->vma[i].len - 1){
+            break;
+        }
+    }
+    if(i == NVMA)
+        return -1;
+    int pte_flags = PTE_U;
+    if(p->vma[i].prot & PROT_READ) pte_flags |= PTE_R;
+    if(p->vma[i].prot & PROT_WRITE) pte_flags |= PTE_W;
+    if(p->vma[i].prot & PROT_EXEC) pte_flags |= PTE_X;
+
+    struct file *f = p->vma[i].vfile;
+
+    if(cause == 13 && f->readable == 0) return -1;
+    if(cause == 15 && f->writable == 0) return -1;
+
+    uint64 pa = (uint64)kalloc();
+    if(pa == 0)
+        return -1;
+    memset((void *)pa, 0, PGSIZE);
+
+    ilock(f->ip);
+
+    int offset = p->vma[i].offset + PGROUNDDOWN(va - p->vma[i].addr);
+    int readbytes = readi(f->ip, 0, (uint64)pa, (uint64)offset, PGSIZE);
+    if(readbytes == 0){
+        iunlock(f->ip);
+        kfree((void *)pa);
+        return -1;
+    }
+
+    iunlock(f->ip);
+    if(mappages(p->pagetable, PGROUNDDOWN(va), PGSIZE, (uint64)pa, pte_flags) != 0){
+        kfree((void *)pa);
+        return -1;
+    }
+
+    return 0;
+}
